@@ -1,100 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  
-  <title>archive_a: 2025 | 熙xiiii awa</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="一个熙的个人博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="熙xiiii awa">
-<meta property="og:url" content="https://apon114514.github.io/archives/2025/index.html">
-<meta property="og:site_name" content="熙xiiii awa">
-<meta property="og:description" content="一个熙的个人博客">
-<meta property="og:locale" content="en_US">
-<meta property="article:author" content="John Doe">
-<meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="熙xiiii awa" type="application/atom+xml">
-  
-  
-  
-  
-<link rel="stylesheet" href="/xixiblog/lib/font-awesome/css/font-awesome.min.css?v=4.7.0.css">
+extends base.pug
 
-  
-<link rel="stylesheet" href="/xixiblog/lib/fancybox/dist/jquery.fancybox.min.css">
+block title
+  if page.category
+     title= page.category + " | " + config.title
+  if page.tag
+     title= page.tag + " | " + config.title
+  if page.archive
+     title= __('archive') + " | " + config.title
 
-  
-<link rel="stylesheet" href="/xixiblog/css/main.css">
+block main
+  //- Blog title and subtitle
+  header.wrapper.header
+    .container.blog-title
+      a#logo.title(href=url_for('.'))= config.title
+      span.subtitle= config.subtitle
+      label#toggle-menu(for="menu", onclick)
+        i.fa.fa-bars
+    //- use checkbox hack for toggle nav-bar on small screens
+    input#menu(type="checkbox")
+    .container.nav-items
+      each nav, name in theme.menu
+        +a_with_current(nav, __(name))
 
-  
-<script src="/xixiblog/lib/jquery/dist/jquery.min.js"></script>
+  article.wrapper
+    .post-entry
+      if page.category || page.tag
+        h1.label-title=  (page.category || page.tag)
+      .post
+        include _partial/postarchive.pug
 
-  
-  
-  
-  
-<meta name="generator" content="Hexo 7.3.0"></head>
-<body>
-  <div id="wrapper">
-    <header id="header" class="clearfix">
-	<a id="logo" href="/xixiblog/" title="熙xiiii awa">熙xiiii awa</a>
-	
-	<nav id="nav-menu" class="clearfix">
-		<form id="search" method="post" action="./" role="search">
-			<input id="search-input" type="text" name="s" class="inputbox" value="Search" onfocus="if (value =='Search'){value =''}" onblur="if (value ==''){value='Search'}">
-		</form>
-		<ul>
-      
-				
-        <li><a class="main-nav-link" href="/xixiblog/">Home</a></li>
-      
-				
-        <li><a class="main-nav-link" href="/xixiblog/archives">Archives</a></li>
-      
-		</ul>
-	</nav>
-</header>
-    <section id="main" class="clearfix">  
-
-  
-    <article class="post-detail">
-      <div id="archives">
-        <h3 class="al_year">2025</h3>
-        
-          <ul class="al_mon_list">
-            <li clsss="li_mon"><span class="al_mon">4</span>
-                <ul class="al_post_list">
-                  
-                    <li><a href="/xixiblog/2025/05/31/miniworld/">miniworld</a></li>
-                  
-                    <li><a href="/xixiblog/2025/05/29/hello-world/">Hello World</a></li>
-                  
-                </ul>
-            </li>
-          </ul>
-        
-      </div>
-    </article>
-  
-  </section>
-    <footer id="footer" role="contentinfo">
-    <div>&copy; 2025 <a href="/">熙xiiii awa</a>.
-    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Designed by <a href="http://rainylog.com" target="_blank">Rainy.</a>
-	</div>
-</footer><!-- end #footer -->
-
-  </div>
-  
-<script src="/xixiblog/lib/fancybox/dist/jquery.fancybox.min.js"></script>
+        // show all categories and tags
+        if !(page.category || page.tag)
+            h2 Categories
+            .all-categories
+              ul.tag-box.list-unstyled
+                for category in site.categories.sort('name').toArray()
+                  li
+                    a(href=url_for(category.path))= category.name
+                      span= category.posts.length
+            h2 Tags
+            .all-tags
+              ul.tag-box.list-unstyled
+                for tag in site.tags.sort('name').toArray()
+                  li
+                    a(href=url_for(tag.path))= tag.name
+                      span= tag.posts.length
 
 
-  
-<script src="/xixiblog/js/helper.js"></script>
-
-  
-<script src="/xixiblog/js/_third-party/gitment.js"></script>
-
-</body>
-</html>
+  include _partial/paginator.pug
